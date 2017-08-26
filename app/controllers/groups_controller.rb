@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+
   def index
     @groups = Group.all
   end
@@ -9,9 +10,11 @@ class GroupsController < ApplicationController
 
  def create
    @group = Group.new(group_params)
-   @group.save
-
-   redirect_to groups_path
+   if @group.save
+      redirect_to groups_path
+   else
+     render :new
+   end 
  end
 
  def show
@@ -24,16 +27,11 @@ class GroupsController < ApplicationController
 
  def update
    @group = Group.find(params[:id])
-
-   if @group.update(group_params)
-     redirect_to groups_path, notice: 'Upadate Success'
-   else
-     render :edit
-   end
-
+   @group.update(group_params)
+   redirect_to groups_path, notice: 'Upadate Success'
  end
 
-  def destroy
+ def destroy
     @group = Group.find(params[:id])
     @group.destroy
     redirect_to groups_path, alert: 'Group deleted'
@@ -45,4 +43,4 @@ class GroupsController < ApplicationController
   params.require(:group).permit(:title, :description)
   end
 
-end
+  end
